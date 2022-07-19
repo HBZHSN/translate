@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.translate.controller.PrimaryStageController" stylesheets="/css/PrimaryStage.css">
+   <right>
+      <Pane prefHeight="396.0" prefWidth="636.0" style="-fx-background-color: #3c3f41;" BorderPane.alignment="CENTER">
+         <children>
+            <TextArea fx:id="englishTextArea" layoutX="60.0" layoutY="27.0" prefHeight="138.0" prefWidth="519.0"  wrapText="true" styleClass="text-area" style="-fx-text-fill: #d4d4d4"/>
+            <TextArea fx:id="chineseTextArea" layoutX="59.0" layoutY="223.0" prefHeight="140.0" prefWidth="519.0" wrapText="true" styleClass="text-area" style="-fx-text-fill: #d4d4d4"/>
+            <Button fx:id="upToDown" layoutX="221.0" layoutY="183.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="198.0" text="翻译" />
+         </children>
+      </Pane>
+   </right>
+</BorderPane>
