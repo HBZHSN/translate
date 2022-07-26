@@ -4,14 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.translate.util.HttpClientUtil;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,8 +27,12 @@ public class BaiduTranslte {
     public String translate(String query, int mode) {
         String resultAnswer;
         try {
+            System.out.println("query string : " + query);
+
             query = toEnglishName(query);
-            System.out.println(query);
+
+            System.out.println("query string changed : " + query);
+
             String result = null;
             Long salt = random.nextLong();
             String a = new StringBuilder(appId)
@@ -39,9 +40,7 @@ public class BaiduTranslte {
                     .append(salt == null ? "" : salt)
                     .append(appSecret == null ? "" : appSecret)
                     .toString();
-            System.out.println(a);
             String sign = getMD5(a);
-            System.out.println(sign);
 
             Map<String, String> params = new HashMap<>();
             params.put("q", query);
@@ -55,17 +54,20 @@ public class BaiduTranslte {
             params.put("sign", sign);
             String paramsJson = JSON.toJSONString(params);
 
-            System.out.println(paramsJson);
+            System.out.println("params json : " + paramsJson);
 
             result = HttpClientUtil.doGet(url, params);
-            System.out.println(result);
+
+            System.out.println("http result : " + result);
 
             JSONObject resultJson = JSON.parseObject(result);
             resultAnswer = resultJson.getJSONArray("trans_result").getJSONObject(0).getString("dst");
             resultAnswer = unicodeToUtf8(resultAnswer);
-            System.out.println(resultAnswer);
-        }catch (Exception e){
-            System.out.println(e);
+
+            System.out.println("http simple result : " + resultAnswer);
+
+        } catch (Exception e) {
+            System.out.println("exception : " + e);
             return "翻译错误";
         }
 
@@ -96,7 +98,7 @@ public class BaiduTranslte {
         char aChar;
         int len = theString.length();
         StringBuffer outBuffer = new StringBuffer(len);
-        for (int x = 0; x < len;) {
+        for (int x = 0; x < len; ) {
             aChar = theString.charAt(x++);
             if (aChar == '\\') {
                 aChar = theString.charAt(x++);
@@ -141,7 +143,7 @@ public class BaiduTranslte {
                     }
                     outBuffer.append((char) value);
                 } else {
-                    if (aChar == 't'){
+                    if (aChar == 't') {
                         aChar = '\t';
                     }
                     if (aChar == 'r') {
@@ -166,6 +168,11 @@ public class BaiduTranslte {
         if (s == null) {//如果为空返回null
             return null;
         }
+        s = s.replaceAll("[^(A-Za-z)]", " ");
+        if (s.toUpperCase().equals(s)) {
+            s = s.toLowerCase();
+        }
+        s = s.replaceAll("_", " ");
         StringBuilder sb = new StringBuilder();
         boolean upperCase = false;
         for (int i = 0; i < s.length(); i++) {
@@ -176,7 +183,7 @@ public class BaiduTranslte {
             }
             if ((i >= 0) && Character.isUpperCase(c)) {
                 if (!upperCase || !nextUpperCase) {
-                    if (i > 0) sb.append(" ");//相当于"+" (加下划线，DownLine标识下划线)
+                    if (i > 0) sb.append(" ");//加空格
                 }
                 upperCase = true;
             } else {
@@ -184,7 +191,6 @@ public class BaiduTranslte {
             }
             sb.append(Character.toLowerCase(c));
         }
-        return sb.toString();//转字符串
+        return sb.toString();
     }
-
 }

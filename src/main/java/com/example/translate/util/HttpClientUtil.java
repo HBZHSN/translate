@@ -1,9 +1,6 @@
 package com.example.translate.util;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -24,20 +21,21 @@ import java.util.Map;
 
 public class HttpClientUtil {
     /**
-     * ·¢ËÍgetÇëÇó
-     * @param url ÇëÇóURL
-     * @param param ÇëÇó²ÎÊý key:value urlÐ¯´ø²ÎÊý »òÕßÎÞ²Î¿É²»Ìî
+     * å‘é€getè¯·æ±‚
+     *
+     * @param url   è¯·æ±‚URL
+     * @param param è¯·æ±‚å‚æ•° key:value urlæºå¸¦å‚æ•° æˆ–è€…æ— å‚å¯ä¸å¡«
      * @return
      */
     public static String doGet(String url, Map<String, String> param) {
 
-        // ´´½¨Httpclient¶ÔÏó
+        // åˆ›å»ºHttpclientå¯¹è±¡
         CloseableHttpClient httpclient = HttpClients.createDefault();
 
         String resultString = "";
         CloseableHttpResponse response = null;
         try {
-            // ´´½¨uri
+            // åˆ›å»ºuri
             URIBuilder builder = new URIBuilder(url);
             if (param != null) {
                 for (String key : param.keySet()) {
@@ -46,12 +44,12 @@ public class HttpClientUtil {
             }
             URI uri = builder.build();
 
-            // ´´½¨http GETÇëÇó
+            // åˆ›å»ºhttp GETè¯·æ±‚
             HttpGet httpGet = new HttpGet(uri);
 
-            // Ö´ÐÐÇëÇó
+            // æ‰§è¡Œè¯·æ±‚
             response = httpclient.execute(httpGet);
-            // ÅÐ¶Ï·µ»Ø×´Ì¬ÊÇ·ñÎª200
+            // åˆ¤æ–­è¿”å›žçŠ¶æ€æ˜¯å¦ä¸º200
             if (response.getStatusLine().getStatusCode() == 200) {
                 resultString = EntityUtils.toString(response.getEntity(), "UTF-8");
             }
@@ -75,30 +73,31 @@ public class HttpClientUtil {
     }
 
     /**
-     * ·¢ËÍpostÇëÇó
-     * @param url ÇëÇóURL
-     * @param param ÇëÇó²ÎÊý key:value
+     * å‘é€postè¯·æ±‚
+     *
+     * @param url   è¯·æ±‚URL
+     * @param param è¯·æ±‚å‚æ•° key:value
      * @return
      */
     public static String doPost(String url, Map<String, String> param) {
-        // ´´½¨Httpclient¶ÔÏó
+        // åˆ›å»ºHttpclientå¯¹è±¡
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
         String resultString = "";
         try {
-            // ´´½¨Http PostÇëÇó
+            // åˆ›å»ºHttp Postè¯·æ±‚
             HttpPost httpPost = new HttpPost(url);
-            // ´´½¨²ÎÊýÁÐ±í
+            // åˆ›å»ºå‚æ•°åˆ—è¡¨
             if (param != null) {
                 List<NameValuePair> paramList = new ArrayList<>();
                 for (String key : param.keySet()) {
                     paramList.add(new BasicNameValuePair(key, param.get(key)));
                 }
-                // Ä£Äâ±íµ¥
+                // æ¨¡æ‹Ÿè¡¨å•
                 UrlEncodedFormEntity entity = new UrlEncodedFormEntity(paramList);
                 httpPost.setEntity(entity);
             }
-            // Ö´ÐÐhttpÇëÇó
+            // æ‰§è¡Œhttpè¯·æ±‚
             response = httpClient.execute(httpPost);
             resultString = EntityUtils.toString(response.getEntity(), "utf-8");
         } catch (Exception e) {
@@ -117,23 +116,24 @@ public class HttpClientUtil {
 
 
     /**
-     * ·¢ËÍpost ÇëÇó
-     * @param url ÇëÇóµØÖ·
-     * @param json ÇëÇó²ÎÊý
+     * å‘é€post è¯·æ±‚
+     *
+     * @param url  è¯·æ±‚åœ°å€
+     * @param json è¯·æ±‚å‚æ•°
      * @return
      */
     public static String doPostJson(String url, String json) {
-        // ´´½¨Httpclient¶ÔÏó
+        // åˆ›å»ºHttpclientå¯¹è±¡
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
         String resultString = "";
         try {
-            // ´´½¨Http PostÇëÇó
+            // åˆ›å»ºHttp Postè¯·æ±‚
             HttpPost httpPost = new HttpPost(url);
-            // ´´½¨ÇëÇóÄÚÈÝ
+            // åˆ›å»ºè¯·æ±‚å†…å®¹
             StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
             httpPost.setEntity(entity);
-            // Ö´ÐÐhttpÇëÇó
+            // æ‰§è¡Œhttpè¯·æ±‚
             response = httpClient.execute(httpPost);
             resultString = EntityUtils.toString(response.getEntity(), "utf-8");
         } catch (Exception e) {
